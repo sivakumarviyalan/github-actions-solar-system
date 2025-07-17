@@ -66,6 +66,7 @@ jobs:
         - run: ls -ltr
     dev-deploy:
         runs-on: ubuntu-latest
+        continue-on-error: true
         needs: docker
         environment: development
         steps:
