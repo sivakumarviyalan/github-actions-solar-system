@@ -76,13 +76,15 @@ jobs:
           with:
              version: 'v1.28.1'
           id: install
-        - uses: azure/k8s-set-context@v4
+        - uses: azure/k8s-set-context@v3
           with:
              method: kubeconfig
              kubeconfig: ${{ secrets.KUBECONFIG }}
         - run: kubectl version -o yaml
         - run: echo 'INGRESS_IP=$(kubectl -n ingress-nginx get services ingress-nginx-controller -o jsonpath="{.status.loadBalancer.ingress[0].ip}")' >> $GITHUB_ENV
+          if: always()
         - uses: cschleiden/replace-tokens@v1
+          if: always()
           with:
             tokenPrefix: '_{_'
             tokenSuffix: '_{_'
@@ -93,4 +95,5 @@ jobs:
             IMAGE: ghcr.io/${{github.repository_owner}}/solar-system:${{github.sha}}
             INGRESS_IP: ${{ env.INGRESS_IP }}
         - run: cat kubernetes/development/*.yaml
+          if: always()
         
